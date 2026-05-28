@@ -55,14 +55,14 @@ Menerima data koordinat GPS dari modul Neo-6M melalui ESP32.
 
 ## 📋 Endpoint Manajemen & Monitoring (Dashboard)
 
-| Method | Endpoint | Fungsi | Role |
+| Method | Endpoint | Fungsi |
 | :--- | :--- | :--- | :--- |
-| **POST** | `/api/auth/login` | Mendapatkan JWT Token | All |
-| **GET** | `/api/vehicles` | List semua kendaraan & posisi *live* | Operator |
-| **GET** | `/api/vehicles/:id/history` | Riwayat koordinat (filter tanggal) | Operator |
-| **POST** | `/api/vehicles` | Registrasi kendaraan & Generate API Key | Admin |
-| **GET** | `/api/geofences` | List area Geofence aktif | All |
-| **GET** | `/api/notifications` | Log peringatan (Overspeed/Geofence) | Operator |
+| **POST** | `/api/auth/login` | Mendapatkan JWT Token |
+| **GET** | `/api/vehicles` | List semua kendaraan & posisi *live* | 
+| **GET** | `/api/vehicles/:id/history` | Riwayat koordinat (filter tanggal) |
+| **POST** | `/api/vehicles` | Registrasi kendaraan & Generate API Key | 
+| **GET** | `/api/geofences` | List area Geofence aktif |
+| **GET** | `/api/notifications` | Log peringatan (Overspeed/Geofence) | 
 
 ---
 
