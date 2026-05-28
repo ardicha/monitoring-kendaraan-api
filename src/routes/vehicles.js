@@ -18,7 +18,6 @@ router.get('/', async (req, res) => {
         vehicle_type: true,
         last_latitude: true,
         last_longitude: true,
-        last_speed: true,
         last_seen_at: true,
         is_active: true,
         user: { select: { name: true, email: true } }
@@ -42,7 +41,6 @@ router.get('/:id/latest', async (req, res) => {
         plate_number: true,
         last_latitude: true,
         last_longitude: true,
-        last_speed: true,
         last_seen_at: true,
       }
     })
@@ -51,12 +49,12 @@ router.get('/:id/latest', async (req, res) => {
 
     res.json({ data: vehicle })
   } catch (error) {
-    console.error('Error latest:', error) // ← tambah ini
+    console.error('Error latest:', error)
     res.status(500).json({ error: 'Gagal mengambil posisi kendaraan.' })
   }
 })
 
-// GET /api/vehicles/:id/history?start=2026-05-01&end=2026-05-05
+// GET /api/vehicles/:id/history
 router.get('/:id/history', async (req, res) => {
   try {
     const { start, end } = req.query
@@ -75,7 +73,6 @@ router.get('/:id/history', async (req, res) => {
       select: {
         latitude: true,
         longitude: true,
-        speed: true,
         heading: true,
         recorded_at: true
       },
@@ -96,16 +93,13 @@ router.get('/:id/stats', async (req, res) => {
 
     const stats = await prisma.vehicleLog.aggregate({
       where: { vehicle_id: vehicleId },
-      _avg: { speed: true },
-      _max: { speed: true },
       _count: { id: true }
     })
 
     res.json({
       data: {
         total_data_points: stats._count.id,
-        avg_speed_kmh: Math.round(stats._avg.speed || 0),
-        max_speed_kmh: Math.round(stats._max.speed || 0),
+        status: "Monitoring Active"
       }
     })
   } catch (error) {

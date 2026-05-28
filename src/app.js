@@ -9,16 +9,14 @@ import telemetryRoutes from './routes/telemetry.js';
 import geofenceRoutes from './routes/geofences.js';
 import notificationRoutes from './routes/notifications.js';
 import { startWorker } from './jobs/processGps.js';
+import { startMqttListener } from './mqtt/listener.js';
 
 const app = express();
 const httpServer = createServer(app);
 
 // Setup Socket.io
 const io = new Server(httpServer, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
+  cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
 // Middleware
@@ -72,6 +70,9 @@ export { io };
 
 // ─── Start Worker ─────────────────────────────────────
 startWorker(io);
+
+// ─── Start Mqtt ─────────────────────────────────────
+startMqttListener();
 
 // ─── Start Server ─────────────────────────────────────
 const PORT = process.env.PORT || 3000;

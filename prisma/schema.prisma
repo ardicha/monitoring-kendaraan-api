@@ -25,7 +25,6 @@ model Vehicle {
   vehicle_type    String         @db.VarChar(20)
   last_latitude   Float?
   last_longitude  Float?
-  last_speed      Float?
   is_active       Boolean        @default(true)
   last_seen_at    DateTime?
   user_id         Int
@@ -40,8 +39,6 @@ model VehicleLog {
   vehicle_id   Int
   latitude     Float
   longitude    Float
-  speed        Float    @default(0)
-  heading      Float?
   recorded_at  DateTime
   created_at   DateTime @default(now())
   vehicle      Vehicle  @relation(fields: [vehicle_id], references: [id])

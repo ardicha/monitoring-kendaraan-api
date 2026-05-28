@@ -5,7 +5,8 @@ import { checkGeofence } from '../services/geofenceService.js'
 
 export function startWorker(io) {
   const worker = new Worker('gpsQueue', async (job) => {
-    const { vehicle_id, latitude, longitude, speed, heading, timestamp } = job.data
+    // Kita buang variabel 'speed' dari job.data
+    const { vehicle_id, latitude, longitude, heading, timestamp } = job.data
 
     console.log(`🔄 Memproses GPS: ${vehicle_id} @ ${latitude},${longitude}`)
 
@@ -21,43 +22,39 @@ export function startWorker(io) {
 
     const recordedAt = timestamp ? new Date(timestamp) : new Date()
 
-    // 2. Simpan log perjalanan
+    // 2. Simpan log perjalanan (Tanpa kolom speed)
     await prisma.vehicleLog.create({
       data: {
         vehicle_id: vehicle.id,
         latitude,
         longitude,
-        speed: speed || 0,
         heading: heading || null,
         recorded_at: recordedAt,
       }
     })
 
-    // 3. Update posisi terakhir di tabel vehicles
+    // 3. Update posisi terakhir di tabel vehicles (Tanpa kolom speed)
     await prisma.vehicle.update({
       where: { id: vehicle.id },
       data: {
         last_latitude: latitude,
         last_longitude: longitude,
-        last_speed: speed || 0,
         last_seen_at: recordedAt,
       }
     })
 
-    // 4. Cek geofence (apakah kendaraan keluar area)
-    await checkGeofence({ vehicle, latitude, longitude, speed, io })
+    // 4. Cek geofence (Logika di dalam geofenceService juga harus disesuaikan tanpa speed)
+    await checkGeofence({ vehicle, latitude, longitude, io })
 
     // 5. Broadcast ke semua frontend via Socket.io
     io.emit('vehicle:updated', {
       vehicle_id,
       latitude,
       longitude,
-      speed,
-      heading,
       timestamp: recordedAt.toISOString()
     })
 
-    console.log(`✅ GPS ${vehicle_id} berhasil diproses.`)
+    console.log(`✅ GPS ${vehicle_id} berhasil diproses (Monitoring Wilayah Only).`)
 
   }, { connection: redisConnection })
 
@@ -65,5 +62,5 @@ export function startWorker(io) {
     console.error(`❌ Job ${job.id} gagal:`, err.message)
   })
 
-  console.log('⚙️  BullMQ Worker "gpsQueue" aktif.')
+  console.log('⚙️  BullMQ Worker "gpsQueue" aktif (Speed Disabled).')
 }
