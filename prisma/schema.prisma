@@ -1,0 +1,70 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"] 
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  email      String    @unique @db.VarChar(150)
+  password   String
+  role       String    @default("operator")
+  vehicles   Vehicle[]
+  created_at DateTime  @default(now())
+}
+
+model Vehicle {
+  id              Int            @id @default(autoincrement())
+  vehicle_id      String         @unique @db.VarChar(50)
+  plate_number    String         @unique @db.VarChar(20)
+  vehicle_type    String         @db.VarChar(20)
+  last_latitude   Float?
+  last_longitude  Float?
+  last_speed      Float?
+  is_active       Boolean        @default(true)
+  last_seen_at    DateTime?
+  user_id         Int
+  user            User           @relation(fields: [user_id], references: [id])
+  logs            VehicleLog[]
+  notifications   Notification[]
+  created_at      DateTime       @default(now())
+}
+
+model VehicleLog {
+  id           Int      @id @default(autoincrement())
+  vehicle_id   Int
+  latitude     Float
+  longitude    Float
+  speed        Float    @default(0)
+  heading      Float?
+  recorded_at  DateTime
+  created_at   DateTime @default(now())
+  vehicle      Vehicle  @relation(fields: [vehicle_id], references: [id])
+
+  @@index([vehicle_id, recorded_at])
+}
+
+model Geofence {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  latitude   Float
+  longitude  Float
+  radius     Float
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  vehicle_id Int
+  type       String   @db.VarChar(50)
+  message    String   @db.Text
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+  vehicle    Vehicle  @relation(fields: [vehicle_id], references: [id])
+}
