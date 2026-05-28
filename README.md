@@ -56,7 +56,7 @@ Menerima data koordinat GPS dari modul Neo-6M melalui ESP32.
 ## 📋 Endpoint Manajemen & Monitoring (Dashboard)
 
 | Method | Endpoint | Fungsi |
-| :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- |
 | **POST** | `/api/auth/login` | Mendapatkan JWT Token |
 | **GET** | `/api/vehicles` | List semua kendaraan & posisi *live* | 
 | **GET** | `/api/vehicles/:id/history` | Riwayat koordinat (filter tanggal) |
