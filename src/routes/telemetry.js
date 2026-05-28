@@ -11,13 +11,10 @@ const router = express.Router()
 //   "vehicle_id": "KBT-001",
 //   "latitude": -7.330,
 //   "longitude": 110.508,
-//   "speed": 40.5,
-//   "heading": 180,
-//   "timestamp": "2026-05-05T08:00:00Z"
 // }
 router.post('/', authenticateDevice, async (req, res) => {
   try {
-    const { vehicle_id, latitude, longitude, speed, heading, timestamp } = req.body
+    const { vehicle_id, latitude, longitude } = req.body
 
     // Validasi data wajib
     if (!vehicle_id || latitude === undefined || longitude === undefined) {
@@ -36,10 +33,7 @@ router.post('/', authenticateDevice, async (req, res) => {
     await gpsQueue.add('processGps', {
       vehicle_id,
       latitude,
-      longitude,
-      speed: speed || 0,
-      heading: heading || null,
-      timestamp: timestamp || new Date().toISOString()
+      longitude
     })
 
     // Response cepat ke ESP32
