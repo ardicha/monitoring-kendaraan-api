@@ -40,8 +40,6 @@ model VehicleLog {
   vehicle_id   Int
   latitude     Float
   longitude    Float
-  speed        Float    @default(0)
-  heading      Float?
   recorded_at  DateTime
   created_at   DateTime @default(now())
   vehicle      Vehicle  @relation(fields: [vehicle_id], references: [id])
