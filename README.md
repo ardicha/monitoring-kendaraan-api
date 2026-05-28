@@ -39,9 +39,6 @@ Menerima data koordinat GPS dari modul Neo-6M melalui ESP32.
       "vehicle_id": "KBT-001",
       "latitude": -7.3306,
       "longitude": 110.4981,
-      "speed": 45.2,
-      "heading": 90,
-      "timestamp": "2025-04-01T08:30:00Z"
     }
     ```
 * **Proses Internal:**
